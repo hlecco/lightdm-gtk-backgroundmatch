@@ -10,4 +10,4 @@ run:
 	$(BINARY)
 
 install:
-	install -m 644 $(BINARY) /etc/bin/
+	install -m644 $(BINARY) /etc/bin/
