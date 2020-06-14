@@ -6,6 +6,8 @@ INCLUDES=./include
 all:
 	$(CC) -o $(BINARY) $(SOURCES) -I$(INCLUDES)
 
-
 run:
 	$(BINARY)
+
+install:
+	install -m 644 $(BINARY) /etc/bin/
