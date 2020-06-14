@@ -10,4 +10,4 @@ run:
 	$(BINARY)
 
 install:
-	install -m644 $(BINARY) /bin/
+	install -m644 $(BINARY) ./bin/
