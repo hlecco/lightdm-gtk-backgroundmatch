@@ -1,0 +1,11 @@
+[Unit]
+Description=Background matcher for XFCE4 and LightDM
+Before=lightdm.service
+
+[Service]
+ExecStart=/usr/bin/lightdm-gtk-backgroundmatch
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multiuser.target lightdm.service
