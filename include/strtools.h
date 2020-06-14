@@ -10,5 +10,6 @@ char *stringSep(const char *,const char sep);
 char *stringCut(const char *,const int, const int);
 char *stringInsert(const char *,const char *, const int);
 char *stringSubstitute(const char *,const char *, const char *);
+int stringCompare(const char *, const char *);
 
 #endif

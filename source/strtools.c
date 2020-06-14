@@ -126,3 +126,17 @@ char *stringSubstitute(const char *string,const char *old,const char *new) {	// 
 
 	return newstr2;
 }
+
+int stringCompare(const char *str1, const char *str2) {
+	int size1,size2;
+	size1 = stringSize(str1);
+	size2 = stringSize(str2);
+
+	if (size1!=size2) return 0;
+
+	for(int i=0; i<size1&&i<size2; i++) {
+		if (str1[i]!=str2[i]) return 0;
+	}
+
+	return 1;
+}

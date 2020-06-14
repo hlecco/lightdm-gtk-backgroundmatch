@@ -5,13 +5,16 @@
 
 #define PATH_CONF "/etc/lightdm/lightdm-gtk-backgroundmatch.conf"
 #define PATH_LIGHTDM "/etc/lightdm/lightdm-gtk-greeter.conf"
+#define PATH_PASSWD "/etc/passwd"
 
 enum {
 	SUCCESS,
 	ERR_NOT_ROOT,
+	PASSWD_READ_FAIL,
 	XFCE_READ_FAIL,
 	LIGHTDM_READ_FAIL,
 	CONF_READ_FAIL,
+	CONF_BAD,
 	LIGHTDM_CONFIG_FAIL,
 	LIGHTDM_CONFIG_BAD
 };
@@ -44,30 +47,54 @@ void copyToFile(char *input, FILE *file) {
 int main(int argc, char *argv[]) {
 	FILE *xfceback;
 	FILE *lightdmback;
+	FILE *passwd;
 	FILE *conf;
 	char *strconf;
+	char *user;
+	char *strpasswd;
+	char *PATH_HOME;
+	char *PATH_XFCE;
+	int counter;	// Contar os espaços vazios em uma string
+	int counter2;	// Contar espaços significativos em uma string
 
 	if(getuid()!=0) {
 		printf("Root privilege is required!\n");
 		return ERR_NOT_ROOT;
 	}
 
+	passwd = fopen(PATH_PASSWD,"r");
+	if (passwd==NULL) {
+		printf("Couldn't open /etc/passwd file. File does not exist or user has no permission to access.\n");
+		return PASSWD_READ_FAIL;
+	}
+	strpasswd=copyFile(passwd);
+	fclose(passwd);
 
+	// Reading conf file
 	conf = fopen(PATH_CONF,"r");
 	if(conf==NULL) {
-		printf("Couldn't open /etc/lightdm/lightdm-gtk-backgroundmatch.conf file. File does not exist or user has no permission to access.i\n");
+		printf("Couldn't open /etc/lightdm/lightdm-gtk-backgroundmatch.conf file. File does not exist or user has no permission to access.\n");
 		return CONF_READ_FAIL;
 	}
-	strconf = copyFile(conf);
+	strconf=copyFile(conf);
 	fclose(conf);
-
-	if(stringFind(strconf,"xfce-path",0)==STRING_NOT_FOUND) {
-		printf("lightdm-gtk-backgroundmatch.conf is badly configured. Check xfce-path.\n");
-		return LIGHTDM_CONFIG_BAD;
+	counter = stringFind(strconf,"=",stringFind(strconf,"user",0))+1;
+	while(strconf[counter]==' ') {
+		counter++;
 	}
-	char *PATH_XFCE;
-	PATH_XFCE = stringSep(&(strconf[stringFind(strconf,"/",stringFind(strconf,"xfce-path",0))]),'\"');
-	free(strconf);
+	counter2=counter;
+	while(strconf[counter2]!=' ' && strconf[counter2]!='\n' && strconf[counter2]!='\r' && strconf[counter2]!=0) {
+		counter2++;
+	}
+	user = (char *) malloc(counter2-counter+1);
+	user[counter2-counter]=0;
+	for(counter2--;counter<=counter2;counter2--) {
+		user[counter2-counter]=strconf[counter2];
+	}
+
+
+	PATH_HOME = stringSep(&(strpasswd[stringFind(strpasswd,"/",stringFind(strpasswd,user,0))]),':');
+	PATH_XFCE = stringInsert(PATH_HOME,"/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml",stringSize(PATH_HOME));
 	xfceback=fopen(PATH_XFCE,"r");
 	if(xfceback==NULL) {
 		printf("Couldn't open xfce config file %s. File does not exist or user has no permission to access.\n",PATH_XFCE);
@@ -110,6 +137,10 @@ int main(int argc, char *argv[]) {
 	copyToFile(newstrlightdm,lightdmback);
 	fclose(lightdmback);
 
+	free(PATH_HOME);
+	free(strconf);
+	free(user);
+	free(strpasswd);
 	free(PATH_XFCE);
 	free(strxfce);
 	free(strlightdm);
