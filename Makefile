@@ -4,7 +4,8 @@ SOURCES=./source/lightdm-backgroundmatch.c ./source/strtools.c
 INCLUDES=./include
 
 all:
-	$(CC) -o $(BINARY) $(SOURCES) -I$(INCLUDES)
+	$(CC) -o ./etc/bin/$(BINARY) $(SOURCES) -I$(INCLUDES)
+
 
 run:
 	$(BINARY)
