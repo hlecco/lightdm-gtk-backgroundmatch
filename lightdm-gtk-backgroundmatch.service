@@ -4,8 +4,6 @@ Before=lightdm.service
 
 [Service]
 ExecStart=/usr/bin/lightdm-gtk-backgroundmatch
-Restart=always
-RestartSec=10
 
 [Install]
-WantedBy=multiuser.target lightdm.service
+WantedBy=lightdm.service
