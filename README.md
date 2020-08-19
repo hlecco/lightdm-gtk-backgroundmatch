@@ -9,4 +9,5 @@ To do it automatically, go to Session and Startup > Application Autostart and ad
 $ systemctl enable lightdm-gtk-backgroundmatch
 
 If you're on Arch Linux, this package is available on AUR.
-  yay -S lightdm-gtk-backgroundmatch
+
+    yay -S lightdm-gtk-backgroundmatch
