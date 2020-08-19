@@ -7,3 +7,6 @@ Files managed are ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce-desktop.xml an
 Running the binary will set the lightdm-gtk-greeter wallpaper as the current xfce wallpaper.
 To do it automatically, go to Session and Startup > Application Autostart and add lightdm-gtk-backgroundmatch. Set the trigger to "on logout". Then, enable the service:
 $ systemctl enable lightdm-gtk-backgroundmatch
+
+If you're on Arch Linux, this package is available on AUR.
+  yay -S lightdm-gtk-backgroundmatch
